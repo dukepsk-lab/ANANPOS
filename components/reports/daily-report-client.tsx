@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation"
 import { Calendar, Receipt, DollarSign, CreditCard, Ban } from "lucide-react"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { toast } from "sonner"
+import { StatCard } from "@/components/ui/stat-card"
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/ui/empty-state"
 
 const formatBaht = (amount: number) => {
   return new Intl.NumberFormat('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount)
@@ -40,126 +45,95 @@ export function DailyReportClient({ initialDate, sales, summary, userRole }: any
   const canVoid = userRole === "OWNER" || userRole === "STAFF"
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Date Picker */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 inline-flex items-center gap-4">
-        <Calendar className="w-6 h-6 text-blue-500" />
-        <input 
-          type="date" 
+      <div className="card inline-flex items-center gap-3 p-3">
+        <Calendar className="w-4 h-4 text-primary" />
+        <input
+          type="date"
           value={date}
           onChange={handleDateChange}
-          className="text-lg font-bold text-slate-700 outline-none bg-transparent"
+          className="text-sm font-semibold text-slate-700 outline-none bg-transparent"
         />
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5 transition-transform hover:-translate-y-1">
-          <div className="w-20 h-20 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-inner">
-            <Receipt className="w-10 h-10" />
-          </div>
-          <div>
-            <p className="text-slate-500 font-medium text-lg">ยอดขายรวม</p>
-            <p className="text-4xl font-black text-slate-800 tracking-tight">฿{formatBaht(summary.totalSales)}</p>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5 transition-transform hover:-translate-y-1">
-          <div className="w-20 h-20 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 shadow-inner">
-            <DollarSign className="w-10 h-10" />
-          </div>
-          <div>
-            <p className="text-slate-500 font-medium text-lg">เงินสดรับ</p>
-            <p className="text-4xl font-black text-slate-800 tracking-tight">฿{formatBaht(summary.cashReceived)}</p>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-5 transition-transform hover:-translate-y-1">
-          <div className="w-20 h-20 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 shadow-inner">
-            <CreditCard className="w-10 h-10" />
-          </div>
-          <div>
-            <p className="text-slate-500 font-medium text-lg">เงินเชื่อ (ค้างชำระ)</p>
-            <p className="text-4xl font-black text-slate-800 tracking-tight">฿{formatBaht(summary.creditSales)}</p>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <StatCard label="ยอดขายรวม" value={`฿${formatBaht(summary.totalSales)}`} icon={Receipt} tone="default" />
+        <StatCard label="เงินสดรับ" value={`฿${formatBaht(summary.cashReceived)}`} icon={DollarSign} tone="success" />
+        <StatCard label="เงินเชื่อ (ค้างชำระ)" value={`฿${formatBaht(summary.creditSales)}`} icon={CreditCard} tone="warning" />
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-600">
-                <th className="p-5 font-bold whitespace-nowrap">เลขที่บิล</th>
-                <th className="p-5 font-bold whitespace-nowrap">เวลา</th>
-                <th className="p-5 font-bold whitespace-nowrap">ลูกค้า</th>
-                <th className="p-5 font-bold whitespace-nowrap">ประเภท</th>
-                <th className="p-5 font-bold text-right whitespace-nowrap">ยอดรวม</th>
-                <th className="p-5 font-bold text-center whitespace-nowrap">สถานะ</th>
-                <th className="p-5 font-bold text-center whitespace-nowrap">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sales.map((s: any) => {
-                const isVoid = s.status === 'VOID'
-                return (
-                  <tr key={s.id} className={`border-b border-slate-50 hover:bg-slate-50 transition-colors ${isVoid ? 'opacity-50 bg-slate-50' : ''}`}>
-                    <td className="p-5 font-bold text-slate-800">{s.billNo}</td>
-                    <td className="p-5 text-slate-500 font-medium">
-                      {new Date(s.saleDate).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.
-                    </td>
-                    <td className="p-5 text-slate-700 font-medium">{s.customer?.name || 'ลูกค้าทั่วไป'}</td>
-                    <td className="p-5">
-                      <span className={`px-4 py-1.5 rounded-full text-sm font-bold shadow-sm ${
-                        s.paymentType === 'CASH' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 
-                        s.paymentType === 'CREDIT' ? 'bg-amber-100 text-amber-700 border border-amber-200' : 
-                        'bg-blue-100 text-blue-700 border border-blue-200'
-                      }`}>
-                        {s.paymentType}
-                      </span>
-                    </td>
-                    <td className={`p-5 text-right font-black text-xl ${isVoid ? 'text-slate-400 line-through' : 'text-slate-800'}`}>
-                      ฿{formatBaht(s.grandTotal)}
-                    </td>
-                    <td className="p-5 text-center">
-                      {isVoid ? (
-                        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-bold border border-red-200 shadow-sm">
-                          <Ban className="w-4 h-4" /> ยกเลิกแล้ว
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-bold border border-green-200 shadow-sm">
-                          สมบูรณ์
-                        </span>
-                      )}
-                    </td>
-                    <td className="p-5 text-center">
-                      {!isVoid && canVoid && (
-                        <button 
-                          onClick={() => setConfirmVoidId(s.id)}
-                          disabled={voidingId === s.id}
-                          className="px-5 py-2.5 bg-white border-2 border-red-100 hover:bg-red-50 hover:border-red-200 text-red-600 rounded-xl text-sm font-bold transition-all shadow-sm disabled:opacity-50 active:scale-95"
-                        >
-                          {voidingId === s.id ? 'กำลังยกเลิก...' : 'ยกเลิกบิล'}
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                )
-              })}
-              {sales.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="p-12 text-center text-slate-500 text-xl font-medium">
-                    ไม่มีรายการขายในวันนี้
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <Table>
+        <THead>
+          <TR>
+            <TH>เลขที่บิล</TH>
+            <TH>เวลา</TH>
+            <TH>ลูกค้า</TH>
+            <TH>ประเภท</TH>
+            <TH className="text-right">ยอดรวม</TH>
+            <TH className="text-center">สถานะ</TH>
+            <TH className="text-center">จัดการ</TH>
+          </TR>
+        </THead>
+        <TBody>
+          {sales.map((s: any) => {
+            const isVoid = s.status === 'VOID'
+            return (
+              <TR key={s.id} className={isVoid ? 'opacity-50 bg-slate-50' : ''}>
+                <TD className="font-semibold text-slate-800">{s.billNo}</TD>
+                <TD className="text-slate-500">
+                  {new Date(s.saleDate).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.
+                </TD>
+                <TD className="text-slate-700">{s.customer?.name || 'ลูกค้าทั่วไป'}</TD>
+                <TD>
+                  <Badge variant={
+                    s.paymentType === 'CASH' ? 'success' :
+                    s.paymentType === 'CREDIT' ? 'warning' : 'info'
+                  }>
+                    {s.paymentType}
+                  </Badge>
+                </TD>
+                <TD className={`text-right font-bold ${isVoid ? 'text-slate-400 line-through' : 'text-slate-800'}`}>
+                  ฿{formatBaht(s.grandTotal)}
+                </TD>
+                <TD className="text-center">
+                  {isVoid ? (
+                    <Badge variant="danger">
+                      <Ban className="w-3 h-3" /> ยกเลิกแล้ว
+                    </Badge>
+                  ) : (
+                    <Badge variant="success">สมบูรณ์</Badge>
+                  )}
+                </TD>
+                <TD className="text-center">
+                  {!isVoid && canVoid && (
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => setConfirmVoidId(s.id)}
+                      disabled={voidingId === s.id}
+                      className="bg-white text-destructive border border-red-200 hover:bg-red-50 shadow-none"
+                    >
+                      {voidingId === s.id ? 'กำลังยกเลิก...' : 'ยกเลิกบิล'}
+                    </Button>
+                  )}
+                </TD>
+              </TR>
+            )
+          })}
+          {sales.length === 0 && (
+            <TR>
+              <TD colSpan={7}>
+                <EmptyState title="ไม่มีรายการขายในวันนี้" />
+              </TD>
+            </TR>
+          )}
+        </TBody>
+      </Table>
 
-      <ConfirmDialog 
+      <ConfirmDialog
         isOpen={confirmVoidId !== null}
         title="ยืนยันการยกเลิกบิล"
         message={`ยกเลิกบิล ${sales.find((s:any) => s.id === confirmVoidId)?.billNo}? สต็อกจะถูกคืนอัตโนมัติ ไม่สามารถย้อนกลับได้`}

@@ -1,7 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Download, Printer, AlertTriangle } from "lucide-react"
+import { Search, Download, Printer, AlertTriangle, Package, Wallet } from "lucide-react"
+import { StatCard } from "@/components/ui/stat-card"
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { EmptyState } from "@/components/ui/empty-state"
 
 export function InventoryClient({ initialData }: { initialData: any[] }) {
   const [searchQuery, setSearchQuery] = useState("")
@@ -104,104 +110,87 @@ export function InventoryClient({ initialData }: { initialData: any[] }) {
   }
 
   return (
-    <div className="flex flex-col h-full gap-6 pb-6">
-      <div className="grid grid-cols-3 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
-          <div>
-            <p className="text-slate-500 font-medium">รายการสินค้าทั้งหมด</p>
-            <h3 className="text-3xl font-bold text-slate-800 mt-1">{filteredData.length} รายการ</h3>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
-          <div>
-            <p className="text-slate-500 font-medium">มูลค่าสต็อกรวม (ทุนเฉลี่ย)</p>
-            <h3 className="text-3xl font-bold text-blue-600 mt-1">฿{formatBaht(totalInventoryValue)}</h3>
-          </div>
-        </div>
-        <div className="bg-red-50 rounded-2xl p-6 shadow-sm border border-red-100 flex items-center justify-between">
-          <div>
-            <p className="text-red-600 font-medium flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5" /> ต้องสั่งซื้อด่วน
-            </p>
-            <h3 className="text-3xl font-bold text-red-700 mt-1">{urgentItems.length} รายการ</h3>
+    <div className="flex flex-col h-full gap-4 pb-4">
+      <div className="grid grid-cols-3 gap-3">
+        <StatCard label="รายการสินค้าทั้งหมด" value={`${filteredData.length} รายการ`} icon={Package} tone="default" />
+        <StatCard label="มูลค่าสต็อกรวม (ทุนเฉลี่ย)" value={`฿${formatBaht(totalInventoryValue)}`} icon={Wallet} tone="default" />
+        <div className="card p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-md flex items-center justify-center shrink-0 bg-red-50 text-red-700">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-red-600 uppercase tracking-wide">ต้องสั่งซื้อด่วน</p>
+              <p className="text-xl font-heading font-bold text-red-700 leading-tight">{urgentItems.length} รายการ</p>
+            </div>
           </div>
           {urgentItems.length > 0 && (
-            <button 
-              onClick={handlePrintPO}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-red-700"
-            >
+            <Button variant="danger" size="sm" onClick={handlePrintPO}>
               พิมพ์ใบสั่งซื้อ
-            </button>
+            </Button>
           )}
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 flex-1 overflow-hidden flex flex-col">
-        <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+      <div className="card p-0 flex-1 overflow-hidden flex flex-col">
+        <div className="p-3 border-b border-border flex justify-between items-center bg-slate-50">
           <div className="relative w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="ค้นหารหัส หรือ ชื่อสินค้า..." 
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              type="text"
+              placeholder="ค้นหารหัส หรือ ชื่อสินค้า..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-9"
             />
           </div>
-          
-          <div className="flex gap-2">
-            <button 
-              onClick={handleExportCSV}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-medium transition-colors"
-            >
-              <Download className="w-4 h-4" /> Export CSV
-            </button>
-          </div>
+
+          <Button variant="outline" size="sm" onClick={handleExportCSV}>
+            <Download className="w-4 h-4" /> Export CSV
+          </Button>
         </div>
 
         <div className="flex-1 overflow-auto">
-          <table className="w-full text-left">
-            <thead className="bg-white sticky top-0 z-10 shadow-sm">
-              <tr className="text-slate-500 font-medium text-sm">
-                <th className="p-4 border-b">รหัส</th>
-                <th className="p-4 border-b">สินค้า</th>
-                <th className="p-4 border-b text-right">คงเหลือ</th>
-                <th className="p-4 border-b">หน่วยฐาน</th>
-                <th className="p-4 border-b text-right">จุดสั่งซื้อ</th>
-                <th className="p-4 border-b text-right">ทุนเฉลี่ย</th>
-                <th className="p-4 border-b text-right">มูลค่ารวม</th>
-                <th className="p-4 border-b text-center">สถานะ</th>
+          <table className="w-full text-left text-sm">
+            <thead className="bg-slate-50 sticky top-0 z-10">
+              <tr className="text-slate-500 font-semibold text-xs uppercase tracking-wide">
+                <th className="px-3 py-2 border-b border-border">รหัส</th>
+                <th className="px-3 py-2 border-b border-border">สินค้า</th>
+                <th className="px-3 py-2 border-b border-border text-right">คงเหลือ</th>
+                <th className="px-3 py-2 border-b border-border">หน่วยฐาน</th>
+                <th className="px-3 py-2 border-b border-border text-right">จุดสั่งซื้อ</th>
+                <th className="px-3 py-2 border-b border-border text-right">ทุนเฉลี่ย</th>
+                <th className="px-3 py-2 border-b border-border text-right">มูลค่ารวม</th>
+                <th className="px-3 py-2 border-b border-border text-center">สถานะ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredData.map(item => (
                 <tr key={item.id} className={`hover:bg-slate-50 ${item.status === 'URGENT' ? 'bg-red-50/30' : ''}`}>
-                  <td className="p-4 text-slate-500 font-mono text-sm">{item.code}</td>
-                  <td className="p-4 font-bold text-slate-800">{item.name}</td>
-                  <td className={`p-4 text-right font-bold ${item.status === 'URGENT' ? 'text-red-600' : 'text-slate-700'}`}>
+                  <td className="px-3 py-2 text-slate-500 font-mono text-xs">{item.code}</td>
+                  <td className="px-3 py-2 font-medium text-slate-800">{item.name}</td>
+                  <td className={`px-3 py-2 text-right font-semibold ${item.status === 'URGENT' ? 'text-red-600' : 'text-slate-700'}`}>
                     {formatQty(item.quantityOnHand)}
                   </td>
-                  <td className="p-4 text-slate-600">{item.baseUnit}</td>
-                  <td className="p-4 text-right text-slate-500">{formatQty(item.reorderPoint)}</td>
-                  <td className="p-4 text-right text-slate-600">฿{formatBaht(item.avgCost)}</td>
-                  <td className="p-4 text-right font-medium text-blue-600">฿{formatBaht(item.totalValue)}</td>
-                  <td className="p-4 text-center">
+                  <td className="px-3 py-2 text-slate-600">{item.baseUnit}</td>
+                  <td className="px-3 py-2 text-right text-slate-500">{formatQty(item.reorderPoint)}</td>
+                  <td className="px-3 py-2 text-right text-slate-600">฿{formatBaht(item.avgCost)}</td>
+                  <td className="px-3 py-2 text-right font-medium text-primary">฿{formatBaht(item.totalValue)}</td>
+                  <td className="px-3 py-2 text-center">
                     {item.status === "URGENT" ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
+                      <Badge variant="danger">
                         <AlertTriangle className="w-3 h-3" /> ต้องสั่งซื้อ
-                      </span>
+                      </Badge>
                     ) : (
-                      <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-                        ปกติ
-                      </span>
+                      <Badge variant="success">ปกติ</Badge>
                     )}
                   </td>
                 </tr>
               ))}
               {filteredData.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="p-8 text-center text-slate-500">
-                    ไม่พบข้อมูลสินค้า
+                  <td colSpan={8}>
+                    <EmptyState title="ไม่พบข้อมูลสินค้า" />
                   </td>
                 </tr>
               )}

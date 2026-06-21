@@ -25,7 +25,7 @@ export default async function AgingReportPage() {
   })
 
   return (
-    <div className="flex flex-col h-full gap-6">
+    <div className="flex flex-col h-full gap-4">
       <AgingReportClient customers={customers} />
     </div>
   )

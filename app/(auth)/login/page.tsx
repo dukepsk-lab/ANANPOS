@@ -10,16 +10,16 @@ export default async function LoginPage() {
   })
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden flex min-h-[600px]">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl card overflow-hidden flex min-h-[480px] p-0">
         {/* Left side - Welcome */}
-        <div className="w-1/2 bg-slate-900 text-white p-12 flex flex-col justify-center">
-          <h1 className="text-4xl font-bold mb-4">ระบบจัดการร้านวัสดุก่อสร้าง</h1>
-          <p className="text-slate-400 text-lg">เข้าสู่ระบบเพื่อเริ่มการขายและจัดการข้อมูล</p>
+        <div className="w-1/2 bg-slate-900 text-white p-8 flex flex-col justify-center">
+          <h1 className="text-2xl font-heading font-bold mb-3">ระบบจัดการร้านวัสดุก่อสร้าง</h1>
+          <p className="text-slate-400 text-sm">เข้าสู่ระบบเพื่อเริ่มการขายและจัดการข้อมูล</p>
         </div>
-        
+
         {/* Right side - Login */}
-        <div className="w-1/2 p-12 bg-white flex flex-col justify-center">
+        <div className="w-1/2 p-8 bg-white flex flex-col justify-center">
           <LoginClient users={users} />
         </div>
       </div>

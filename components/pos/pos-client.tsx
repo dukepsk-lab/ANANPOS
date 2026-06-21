@@ -84,19 +84,19 @@ export function POSClient({ initialProducts, categories, customers }: any) {
   const grandTotal = afterDiscount + vatAmount
 
   return (
-    <div className="flex w-full h-[calc(100vh-80px)] overflow-hidden bg-background">
+    <div className="flex w-full h-[calc(100vh-64px)] overflow-hidden bg-background">
       {/* LEFT 60% */}
-      <div className="w-3/5 border-r border-slate-200 flex flex-col h-full bg-white z-0">
-        <ProductSearch 
-          products={initialProducts} 
-          categories={categories} 
-          onSelectProduct={setSelectedProduct} 
+      <div className="w-3/5 border-r border-border flex flex-col h-full bg-white z-0">
+        <ProductSearch
+          products={initialProducts}
+          categories={categories}
+          onSelectProduct={setSelectedProduct}
         />
       </div>
 
       {/* RIGHT 40% */}
-      <div className="w-2/5 flex flex-col h-full z-10 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)]">
-        <CartPanel 
+      <div className="w-2/5 flex flex-col h-full z-10 shadow-[-2px_0_8px_-2px_rgba(0,0,0,0.06)]">
+        <CartPanel
           cart={cart}
           onRemove={removeFromCart}
           customers={customers}

@@ -15,11 +15,11 @@ export function LogoutButton() {
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setIsConfirmOpen(true)}
-        className="flex items-center gap-3 px-3 py-3 w-full rounded-lg hover:bg-red-900/50 text-red-400 transition-colors text-lg"
+        className="flex items-center gap-2.5 px-3 py-2 w-full rounded-md hover:bg-red-900/40 text-red-400 transition-colors text-sm font-medium"
       >
-        <LogOut className="w-6 h-6" />
+        <LogOut className="w-4 h-4" />
         ออกจากระบบ
       </button>
 

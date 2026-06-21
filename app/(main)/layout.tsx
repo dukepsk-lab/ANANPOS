@@ -41,27 +41,27 @@ export default async function MainLayout({
   return (
     <div className="flex h-screen bg-background overflow-hidden font-sans">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex-col hidden md:flex shrink-0 shadow-xl z-20">
-        <div className="h-20 flex items-center px-6 bg-primary text-white font-bold text-2xl gap-3 shadow-md">
-          <Store className="w-8 h-8" />
+      <aside className="w-56 bg-slate-900 text-slate-300 flex-col hidden md:flex shrink-0 z-20">
+        <div className="h-14 flex items-center px-4 bg-slate-950 text-white font-bold text-base gap-2 border-b border-slate-800">
+          <Store className="w-5 h-5 text-accent" />
           <span className="font-heading tracking-tight">ANAN POS</span>
         </div>
-        <nav className="flex-1 py-6 flex flex-col gap-2 px-4">
+        <nav className="flex-1 py-3 flex flex-col gap-0.5 px-2">
           {visibleMenu.map((item) => {
             const Icon = item.icon
             return (
-              <Link 
-                key={item.href} 
+              <Link
+                key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 px-4 py-3.5 rounded-xl hover:bg-primary hover:text-white transition-all duration-200 font-bold"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-md hover:bg-slate-800 hover:text-white transition-colors duration-150 text-sm font-medium text-slate-300"
               >
-                <Icon className="w-6 h-6" />
+                <Icon className="w-4 h-4" />
                 {item.name}
               </Link>
             )
           })}
         </nav>
-        <div className="p-4 bg-slate-950/50">
+        <div className="p-2 border-t border-slate-800">
           <form id="logout-form" action={async () => {
             "use server"
             await signOut()
@@ -74,29 +74,29 @@ export default async function MainLayout({
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden bg-background">
         {/* Topbar */}
-        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-6 md:px-10 shrink-0 shadow-sm z-10">
-          <div className="flex items-center gap-4">
+        <header className="h-14 bg-white border-b border-border flex items-center justify-between px-4 md:px-6 shrink-0 z-10">
+          <div className="flex items-center gap-3">
             <button className="md:hidden p-2 rounded-md hover:bg-slate-100 text-slate-600">
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5" />
             </button>
-            <h1 className="text-2xl font-heading font-bold text-slate-800 hidden md:block tracking-tight">หน้าหลัก</h1>
+            <h1 className="text-sm font-heading font-bold text-slate-800 hidden md:block tracking-tight">หน้าหลัก</h1>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <FontSizeToggle />
-            <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 px-5 py-2.5 rounded-full shadow-sm hover:shadow-md transition-all">
-              <div className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shadow-sm">
+            <div className="flex items-center gap-2 border-l border-border pl-4">
+              <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">
                 {session.user.name?.charAt(0)}
               </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-slate-800 leading-none">{session.user.name}</span>
-                <span className="text-xs text-primary font-bold">{role}</span>
+              <div className="flex flex-col leading-tight">
+                <span className="font-semibold text-slate-800 text-xs">{session.user.name}</span>
+                <span className="text-[11px] text-primary font-medium">{role}</span>
               </div>
             </div>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto p-4 md:p-8">
+        <main className="flex-1 overflow-auto p-4 md:p-5">
           {children}
         </main>
       </div>

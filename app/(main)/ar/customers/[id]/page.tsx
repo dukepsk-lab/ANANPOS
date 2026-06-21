@@ -28,5 +28,9 @@ export default async function CustomerDetailPage({
 
   if (!customer) return notFound()
 
-  return <CustomerDetailClient customer={customer} />
+  return (
+    <div className="flex flex-col h-full gap-4">
+      <CustomerDetailClient customer={customer} />
+    </div>
+  )
 }

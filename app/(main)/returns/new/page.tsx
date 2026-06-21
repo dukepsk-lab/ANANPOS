@@ -9,7 +9,7 @@ export default async function NewReturnPage() {
   if (!session?.user?.id) redirect("/login")
 
   return (
-    <div className="flex flex-col h-full gap-6">
+    <div className="flex flex-col h-full gap-4">
       <CreateReturnClient currentUserId={parseInt(session.user.id)} />
     </div>
   )

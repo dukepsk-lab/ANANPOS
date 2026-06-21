@@ -75,11 +75,11 @@ export function ReceiptClient({ sale }: { sale: any }) {
       </div>
 
       {/* Hide controls when printing */}
-      <div className="mt-8 print:hidden flex flex-col gap-2">
-        <button onClick={() => window.print()} className="w-full bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-xl font-bold text-lg transition-colors">
+      <div className="mt-6 print:hidden flex flex-col gap-2">
+        <button onClick={() => window.print()} className="btn-secondary w-full h-11 text-base">
           พิมพ์บิลอีกครั้ง
         </button>
-        <button onClick={() => window.history.back()} className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 p-4 rounded-xl font-bold text-lg transition-colors">
+        <button onClick={() => window.history.back()} className="btn-ghost w-full h-11 text-base bg-slate-100">
           กลับไปหน้าขาย
         </button>
       </div>

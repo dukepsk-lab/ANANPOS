@@ -82,106 +82,106 @@ export function PaymentDialog({
   }
 
   return (
-    <div className="fixed inset-0 bg-slate-900/60 flex items-center justify-center z-[100] p-4 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl flex overflow-hidden h-[700px] animate-in slide-in-from-bottom-8 duration-300">
-        
+    <div className="modal-overlay">
+      <div className="modal flex w-full max-w-3xl h-[640px]">
+
         {/* LEFT: Payment Methods */}
-        <div className="w-1/2 border-r border-slate-100 flex flex-col bg-slate-50">
-          <div className="p-6 border-b border-slate-200 bg-white">
-            <h2 className="text-3xl font-heading font-bold text-slate-800">การชำระเงิน</h2>
+        <div className="w-1/2 border-r border-border flex flex-col bg-slate-50">
+          <div className="p-4 border-b border-border bg-white">
+            <h2 className="text-lg font-heading font-bold text-slate-800">การชำระเงิน</h2>
           </div>
-          
-          <div className="flex border-b border-slate-200 bg-white">
-            <button 
+
+          <div className="flex border-b border-border bg-white">
+            <button
               onClick={() => setTab('CASH')}
-              className={`flex-1 py-4 text-lg font-heading font-bold border-b-4 transition-colors ${tab === 'CASH' ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-slate-500 hover:bg-slate-100'}`}
+              className={`flex-1 h-11 text-sm font-heading font-bold border-b-2 transition-colors ${tab === 'CASH' ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-slate-500 hover:bg-slate-100'}`}
             >
               เงินสด
             </button>
-            <button 
+            <button
               onClick={() => setTab('CREDIT')}
-              className={`flex-1 py-4 text-lg font-heading font-bold border-b-4 transition-colors ${tab === 'CREDIT' ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-slate-500 hover:bg-slate-100'}`}
+              className={`flex-1 h-11 text-sm font-heading font-bold border-b-2 transition-colors ${tab === 'CREDIT' ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-slate-500 hover:bg-slate-100'}`}
             >
               เงินเชื่อ
             </button>
-            <button 
+            <button
               onClick={() => setTab('PARTIAL')}
-              className={`flex-1 py-4 text-lg font-heading font-bold border-b-4 transition-colors ${tab === 'PARTIAL' ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-slate-500 hover:bg-slate-100'}`}
+              className={`flex-1 h-11 text-sm font-heading font-bold border-b-2 transition-colors ${tab === 'PARTIAL' ? 'border-primary text-primary bg-primary/5' : 'border-transparent text-slate-500 hover:bg-slate-100'}`}
             >
               จ่ายบางส่วน
             </button>
           </div>
 
-          <div className="p-6 flex-1 flex flex-col justify-center">
+          <div className="p-4 flex-1 flex flex-col justify-center overflow-y-auto">
             {tab === 'CASH' || tab === 'PARTIAL' ? (
-              <div className="space-y-4">
-                <div className="text-center mb-6">
-                  <p className="text-slate-500 font-medium mb-2">ยอดที่ต้องชำระ</p>
-                  <p className="text-5xl font-heading font-black text-slate-800">฿{formatBaht(grandTotal)}</p>
+              <div className="space-y-3">
+                <div className="text-center mb-3">
+                  <p className="text-sm text-slate-500 font-medium mb-1">ยอดที่ต้องชำระ</p>
+                  <p className="text-3xl font-heading font-bold text-slate-800">฿{formatBaht(grandTotal)}</p>
                 </div>
-                
-                <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                  <span className="text-slate-400 font-medium">รับเงินมา</span>
-                  <input 
-                    type="text" 
-                    readOnly 
-                    value={receivedAmount} 
+
+                <div className="card p-3 flex items-center justify-between">
+                  <span className="text-slate-400 text-sm font-medium">รับเงินมา</span>
+                  <input
+                    type="text"
+                    readOnly
+                    value={receivedAmount}
                     placeholder="0"
-                    className="text-right text-4xl font-heading font-black text-primary outline-none w-2/3 bg-transparent"
+                    className="text-right text-2xl font-heading font-bold text-primary outline-none w-2/3 bg-transparent"
                   />
                 </div>
 
-                <div className="grid grid-cols-4 gap-3 mt-4">
+                <div className="grid grid-cols-4 gap-2 mt-3">
                   {[100, 500, 1000].map(amt => (
-                    <button key={amt} onClick={() => handleQuickAmount(amt)} className="p-3 bg-secondary/10 text-secondary font-bold font-heading rounded-xl border border-secondary/20 text-lg hover:bg-secondary/20 transition-colors">
+                    <button key={amt} onClick={() => handleQuickAmount(amt)} className="h-10 bg-secondary/10 text-secondary font-bold font-heading rounded-md border border-secondary/20 text-sm hover:bg-secondary/20 transition-colors">
                       +{amt}
                     </button>
                   ))}
-                  <button onClick={() => handleQuickAmount(grandTotal)} className="p-3 bg-primary/10 text-primary font-bold font-heading rounded-xl border border-primary/20 text-lg hover:bg-primary/20 transition-colors">
+                  <button onClick={() => handleQuickAmount(grandTotal)} className="h-10 bg-primary/10 text-primary font-bold font-heading rounded-md border border-primary/20 text-sm hover:bg-primary/20 transition-colors">
                     พอดี
                   </button>
 
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                    <button key={num} onClick={() => handleNumpad(num.toString())} className="p-4 bg-white border border-slate-200 rounded-xl text-3xl font-heading font-bold hover:bg-slate-50 active:bg-slate-100 transition-colors shadow-sm">
+                    <button key={num} onClick={() => handleNumpad(num.toString())} className="h-12 bg-white border border-border rounded-md text-xl font-heading font-bold hover:bg-slate-50 active:bg-slate-100 transition-colors shadow-sm">
                       {num}
                     </button>
                   ))}
-                  <button onClick={() => handleNumpad('C')} className="p-4 bg-red-50 text-red-500 border border-red-100 rounded-xl text-xl font-bold hover:bg-red-100 transition-colors">
+                  <button onClick={() => handleNumpad('C')} className="h-12 bg-red-50 text-destructive border border-red-200 rounded-md text-base font-bold hover:bg-red-100 transition-colors">
                     C
                   </button>
-                  <button onClick={() => handleNumpad('0')} className="p-4 bg-white border border-slate-200 rounded-xl text-3xl font-heading font-bold hover:bg-slate-50 active:bg-slate-100 transition-colors shadow-sm">
+                  <button onClick={() => handleNumpad('0')} className="h-12 bg-white border border-border rounded-md text-xl font-heading font-bold hover:bg-slate-50 active:bg-slate-100 transition-colors shadow-sm">
                     0
                   </button>
-                  <button onClick={() => handleNumpad('B')} className="p-4 bg-slate-100 border border-slate-200 rounded-xl text-xl font-bold hover:bg-slate-200 transition-colors">
+                  <button onClick={() => handleNumpad('B')} className="h-12 bg-slate-100 border border-border rounded-md text-base font-bold hover:bg-slate-200 transition-colors">
                     ⌫
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="text-center space-y-6 animate-in fade-in zoom-in-95">
+              <div className="text-center space-y-4">
                 {!customer ? (
-                  <div className="bg-red-50 text-red-600 p-8 rounded-3xl border border-red-100 shadow-sm">
-                    <p className="text-2xl font-bold mb-2">ต้องเลือกลูกค้าสำหรับเงินเชื่อ!</p>
-                    <p className="text-red-500">กรุณาปิดหน้าต่างนี้และเลือกลูกค้าในบิลก่อน</p>
+                  <div className="bg-red-50 text-destructive p-5 rounded-lg border border-red-200 shadow-sm">
+                    <p className="text-base font-bold mb-1">ต้องเลือกลูกค้าสำหรับเงินเชื่อ!</p>
+                    <p className="text-sm text-red-500">กรุณาปิดหน้าต่างนี้และเลือกลูกค้าในบิลก่อน</p>
                   </div>
                 ) : (
                   <>
-                    <div className="w-24 h-24 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-4xl font-bold mx-auto border-4 border-white shadow-md">
+                    <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl font-bold mx-auto border-2 border-white shadow-sm">
                       {customer.name.charAt(0)}
                     </div>
-                    <h3 className="text-3xl font-bold text-slate-800">{customer.name}</h3>
-                    <div className="bg-white p-6 rounded-3xl border border-slate-200 text-left space-y-4 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-800">{customer.name}</h3>
+                    <div className="card p-4 text-left space-y-3">
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-500 font-medium">ยอดหนี้เดิม</span>
-                        <span className="font-bold text-xl text-slate-700">฿{formatBaht(customer.balance)}</span>
+                        <span className="text-sm text-slate-500 font-medium">ยอดหนี้เดิม</span>
+                        <span className="font-bold text-base text-slate-700">฿{formatBaht(customer.balance)}</span>
                       </div>
-                      <div className="flex justify-between items-center text-blue-600 font-bold bg-blue-50 p-3 rounded-xl">
+                      <div className="flex justify-between items-center text-sm text-blue-600 font-bold bg-blue-50 p-2.5 rounded-md">
                         <span>บิลนี้เพิ่ม</span>
-                        <span className="text-xl">+ ฿{formatBaht(grandTotal)}</span>
+                        <span className="text-base">+ ฿{formatBaht(grandTotal)}</span>
                       </div>
-                      <div className="border-t border-slate-100 pt-4 flex justify-between items-center">
-                        <span className="text-slate-600 font-medium">ยอดหนี้สุทธิ</span>
-                        <span className="font-black text-2xl text-slate-900">฿{formatBaht(customer.balance + grandTotal)}</span>
+                      <div className="border-t border-border pt-3 flex justify-between items-center">
+                        <span className="text-sm text-slate-600 font-medium">ยอดหนี้สุทธิ</span>
+                        <span className="font-bold text-lg text-slate-900">฿{formatBaht(customer.balance + grandTotal)}</span>
                       </div>
                     </div>
                   </>
@@ -192,66 +192,66 @@ export function PaymentDialog({
         </div>
 
         {/* RIGHT: Summary & Actions */}
-        <div className="w-1/2 p-8 flex flex-col bg-white">
-          <div className="flex justify-between items-start mb-8">
-            <h3 className="text-xl font-bold text-slate-800">เอกสาร</h3>
-            <button onClick={onClose} className="p-3 rounded-full hover:bg-slate-100 text-slate-400 bg-slate-50 transition-colors">
-              <X className="w-6 h-6" />
+        <div className="w-1/2 p-5 flex flex-col bg-white">
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-base font-bold text-slate-800">เอกสาร</h3>
+            <button onClick={onClose} className="p-2 rounded-md hover:bg-slate-100 text-slate-400 transition-colors">
+              <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="flex gap-4 mb-8">
-            <button 
+          <div className="flex gap-3 mb-4">
+            <button
               onClick={() => setDocType('RECEIPT')}
-              className={`flex-1 p-6 rounded-2xl border-2 flex flex-col items-center gap-4 transition-all hover:-translate-y-1 ${docType === 'RECEIPT' ? 'border-primary bg-primary/5 text-primary ring-4 ring-primary/20 shadow-md' : 'border-slate-100 text-slate-500 hover:border-slate-300 shadow-sm'}`}
+              className={`flex-1 p-3 rounded-md border-2 flex flex-col items-center gap-2 transition-all ${docType === 'RECEIPT' ? 'border-primary bg-primary/5 text-primary ring-2 ring-primary/20 shadow-sm' : 'border-border text-slate-500 hover:border-slate-300'}`}
             >
-              <Receipt className="w-10 h-10" />
-              <span className="font-heading font-bold text-lg">ใบเสร็จอย่างย่อ</span>
+              <Receipt className="w-6 h-6" />
+              <span className="font-heading font-semibold text-sm">ใบเสร็จอย่างย่อ</span>
             </button>
-            <button 
+            <button
               onClick={() => setDocType('TAX_INVOICE')}
-              className={`flex-1 p-6 rounded-2xl border-2 flex flex-col items-center gap-4 transition-all hover:-translate-y-1 ${docType === 'TAX_INVOICE' ? 'border-primary bg-primary/5 text-primary ring-4 ring-primary/20 shadow-md' : 'border-slate-100 text-slate-500 hover:border-slate-300 shadow-sm'}`}
+              className={`flex-1 p-3 rounded-md border-2 flex flex-col items-center gap-2 transition-all ${docType === 'TAX_INVOICE' ? 'border-primary bg-primary/5 text-primary ring-2 ring-primary/20 shadow-sm' : 'border-border text-slate-500 hover:border-slate-300'}`}
             >
-              <FileText className="w-10 h-10" />
-              <span className="font-heading font-bold text-lg">ใบกำกับภาษี</span>
+              <FileText className="w-6 h-6" />
+              <span className="font-heading font-semibold text-sm">ใบกำกับภาษี</span>
             </button>
           </div>
 
           {tab === 'CASH' && (
-            <div className="bg-slate-900 text-white p-8 rounded-[2rem] mb-8 flex-1 flex flex-col justify-center items-center relative overflow-hidden shadow-xl">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500 rounded-full blur-3xl opacity-20" />
-              <p className="text-slate-400 text-xl font-medium mb-2 relative z-10">เงินทอน</p>
-              <p className={`text-7xl font-black relative z-10 tracking-tighter ${change > 0 ? 'text-emerald-400' : 'text-white'}`}>
+            <div className="bg-slate-900 text-white p-5 rounded-lg mb-4 flex-1 flex flex-col justify-center items-center relative overflow-hidden shadow-md">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 rounded-full blur-3xl opacity-20" />
+              <p className="text-slate-400 text-sm font-medium mb-1 relative z-10">เงินทอน</p>
+              <p className={`text-4xl font-bold relative z-10 tracking-tight ${change > 0 ? 'text-emerald-400' : 'text-white'}`}>
                 ฿{formatBaht(Math.max(0, change))}
               </p>
             </div>
           )}
 
           {tab === 'PARTIAL' && (
-            <div className="bg-slate-900 text-white p-8 rounded-[2rem] mb-8 flex-1 flex flex-col justify-center items-center relative overflow-hidden shadow-xl">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500 rounded-full blur-3xl opacity-20" />
-              <p className="text-slate-400 text-xl font-medium mb-2 relative z-10">ค้างชำระเพิ่ม (ลงบัญชี)</p>
-              <p className={`text-6xl font-black text-amber-400 relative z-10 tracking-tighter`}>
+            <div className="bg-slate-900 text-white p-5 rounded-lg mb-4 flex-1 flex flex-col justify-center items-center relative overflow-hidden shadow-md">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500 rounded-full blur-3xl opacity-20" />
+              <p className="text-slate-400 text-sm font-medium mb-1 relative z-10">ค้างชำระเพิ่ม (ลงบัญชี)</p>
+              <p className="text-3xl font-bold text-amber-400 relative z-10 tracking-tight">
                 ฿{formatBaht(Math.max(0, grandTotal - receivedNum))}
               </p>
             </div>
           )}
 
           {tab === 'CREDIT' && (
-            <div className="bg-slate-900 text-white p-8 rounded-[2rem] mb-8 flex-1 flex flex-col justify-center items-center relative overflow-hidden shadow-xl">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500 rounded-full blur-3xl opacity-20" />
-              <p className="text-slate-400 text-xl font-medium mb-2 relative z-10">บันทึกเป็นหนี้</p>
-              <p className={`text-6xl font-black text-blue-400 relative z-10 tracking-tighter`}>
+            <div className="bg-slate-900 text-white p-5 rounded-lg mb-4 flex-1 flex flex-col justify-center items-center relative overflow-hidden shadow-md">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20" />
+              <p className="text-slate-400 text-sm font-medium mb-1 relative z-10">บันทึกเป็นหนี้</p>
+              <p className="text-3xl font-bold text-blue-400 relative z-10 tracking-tight">
                 ฿{formatBaht(grandTotal)}
               </p>
             </div>
           )}
 
-          <div className="mt-auto pt-4 border-t border-slate-100">
-            <button 
+          <div className="mt-auto pt-3 border-t border-border">
+            <button
               onClick={handleConfirm}
               disabled={loading}
-              className="w-full py-6 bg-accent hover:bg-accent/90 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-2xl text-2xl font-heading font-bold transition-transform shadow-xl active:scale-95 flex justify-center items-center gap-3"
+              className="w-full h-14 bg-accent hover:bg-accent/90 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-md text-lg font-heading font-bold transition-colors shadow-sm active:scale-[0.98] flex justify-center items-center gap-2"
             >
               {loading ? "กำลังบันทึก..." : "ยืนยันการขาย"}
             </button>

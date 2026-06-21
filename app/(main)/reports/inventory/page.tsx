@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { InventoryClient } from "@/components/reports/inventory-client"
+import { PageHeader } from "@/components/ui/page-header"
 
 
 export const dynamic = "force-dynamic"
@@ -54,14 +55,9 @@ export default async function InventoryReportPage() {
   })
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">รายงานสินค้าคงคลัง</h1>
-          <p className="text-slate-500 mt-1">ตรวจสอบยอดคงเหลือ จุดสั่งซื้อ และมูลค่าสต็อก</p>
-        </div>
-      </div>
-      
+    <div className="flex flex-col h-full gap-4">
+      <PageHeader title="รายงานสินค้าคงคลัง" description="ตรวจสอบยอดคงเหลือ จุดสั่งซื้อ และมูลค่าสต็อก" />
+
       <div className="flex-1 overflow-hidden">
         <InventoryClient initialData={inventoryData} />
       </div>

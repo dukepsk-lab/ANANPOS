@@ -1,8 +1,14 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Calendar, Download, Search } from "lucide-react"
+import { Calendar, Download, Search, Wallet, AlertTriangle, AlertOctagon } from "lucide-react"
 import { differenceInDays, format } from "date-fns"
+import { PageHeader } from "@/components/ui/page-header"
+import { StatCard } from "@/components/ui/stat-card"
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { EmptyState } from "@/components/ui/empty-state"
 
 export function AgingReportClient({ customers }: any) {
   const [asOfDate, setAsOfDate] = useState(format(new Date(), 'yyyy-MM-dd'))
@@ -94,90 +100,106 @@ export function AgingReportClient({ customers }: any) {
   }
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">รายงานอายุหนี้ (AR Aging Report)</h1>
-          <p className="text-slate-500 mt-1">วิเคราะห์ยอดค้างชำระแบ่งตามช่วงเวลา</p>
+    <div className="flex flex-col h-full gap-4">
+      <PageHeader
+        title="รายงานอายุหนี้ (AR Aging Report)"
+        description="วิเคราะห์ยอดค้างชำระแบ่งตามช่วงเวลา"
+        actions={
+          <Button variant="secondary" size="sm" onClick={exportCSV}>
+            <Download className="w-4 h-4" /> Export CSV
+          </Button>
+        }
+      />
+
+      <div className="grid grid-cols-3 gap-3">
+        <StatCard
+          label="ยอดรวมค้างชำระ"
+          value={`฿${formatBaht(agingData.totals.totalAll)}`}
+          icon={Wallet}
+          tone="default"
+        />
+        <StatCard
+          label="ค้าง 31-90 วัน"
+          value={`฿${formatBaht(agingData.totals.total31to60 + agingData.totals.total61to90)}`}
+          icon={AlertTriangle}
+          tone="warning"
+        />
+        <StatCard
+          label="ค้างเกิน 90 วัน"
+          value={`฿${formatBaht(agingData.totals.totalOver90)}`}
+          icon={AlertOctagon}
+          tone="danger"
+        />
+      </div>
+
+      <div className="card p-3 flex flex-wrap gap-3 items-center">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Input
+            type="text"
+            placeholder="ค้นหาลูกค้า..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
         </div>
-        
-        <div className="flex gap-4 items-center">
+
+        <div className="flex items-center gap-2">
+          <label className="text-sm font-medium text-slate-600 whitespace-nowrap">วิเคราะห์ ณ วันที่:</label>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="ค้นหาลูกค้า..." 
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              type="date"
+              value={asOfDate}
+              onChange={e => setAsOfDate(e.target.value)}
+              className="pl-9"
             />
           </div>
-          
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-slate-600">วิเคราะห์ ณ วันที่:</label>
-            <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input 
-                type="date" 
-                value={asOfDate}
-                onChange={e => setAsOfDate(e.target.value)}
-                className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          <button 
-            onClick={exportCSV}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg transition-colors shadow-sm font-medium"
-          >
-            <Download className="w-4 h-4" /> Export CSV
-          </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-auto">
-          <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-100 text-slate-600 font-medium sticky top-0 z-10">
-              <tr>
-                <th className="p-4">ชื่อลูกค้า</th>
-                <th className="p-4 text-right bg-blue-50/50">ยอดรวมค้างชำระ</th>
-                <th className="p-4 text-right text-green-700">0 - 30 วัน</th>
-                <th className="p-4 text-right text-yellow-600">31 - 60 วัน</th>
-                <th className="p-4 text-right text-orange-600">61 - 90 วัน</th>
-                <th className="p-4 text-right text-red-600">เกิน 90 วัน</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {agingData.rows.map((row: any) => (
-                <tr key={row.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="p-4 font-medium text-slate-800">{row.name}</td>
-                  <td className="p-4 text-right font-bold text-slate-800 bg-blue-50/20">{formatBaht(row.total)}</td>
-                  <td className="p-4 text-right text-slate-600">{row.b0to30 > 0 ? formatBaht(row.b0to30) : "-"}</td>
-                  <td className="p-4 text-right text-slate-600">{row.b31to60 > 0 ? formatBaht(row.b31to60) : "-"}</td>
-                  <td className="p-4 text-right text-slate-600">{row.b61to90 > 0 ? formatBaht(row.b61to90) : "-"}</td>
-                  <td className="p-4 text-right font-bold text-red-500">{row.bOver90 > 0 ? formatBaht(row.bOver90) : "-"}</td>
-                </tr>
-              ))}
+      <div className="flex-1 overflow-hidden">
+        <Table>
+          <THead>
+            <TR>
+              <TH>ชื่อลูกค้า</TH>
+              <TH className="text-right">ยอดรวมค้างชำระ</TH>
+              <TH className="text-right text-emerald-700">0 - 30 วัน</TH>
+              <TH className="text-right text-amber-600">31 - 60 วัน</TH>
+              <TH className="text-right text-orange-600">61 - 90 วัน</TH>
+              <TH className="text-right text-red-600">เกิน 90 วัน</TH>
+            </TR>
+          </THead>
+          <TBody>
+            {agingData.rows.map((row: any) => (
+              <TR key={row.id}>
+                <TD className="font-medium text-slate-800">{row.name}</TD>
+                <TD className="text-right font-bold text-slate-800">{formatBaht(row.total)}</TD>
+                <TD className="text-right text-slate-600">{row.b0to30 > 0 ? formatBaht(row.b0to30) : "-"}</TD>
+                <TD className="text-right text-slate-600">{row.b31to60 > 0 ? formatBaht(row.b31to60) : "-"}</TD>
+                <TD className="text-right text-slate-600">{row.b61to90 > 0 ? formatBaht(row.b61to90) : "-"}</TD>
+                <TD className="text-right font-bold text-red-500">{row.bOver90 > 0 ? formatBaht(row.bOver90) : "-"}</TD>
+              </TR>
+            ))}
 
-              {agingData.rows.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-500">ไม่มียอดค้างชำระ ณ วันที่ระบุ</td>
-                </tr>
-              )}
-            </tbody>
-            <tfoot className="bg-slate-800 text-white sticky bottom-0 z-10">
-              <tr>
-                <td className="p-4 font-bold text-right">รวมทั้งสิ้น</td>
-                <td className="p-4 text-right font-black text-lg">฿{formatBaht(agingData.totals.totalAll)}</td>
-                <td className="p-4 text-right font-bold text-green-400">฿{formatBaht(agingData.totals.total0to30)}</td>
-                <td className="p-4 text-right font-bold text-yellow-400">฿{formatBaht(agingData.totals.total31to60)}</td>
-                <td className="p-4 text-right font-bold text-orange-400">฿{formatBaht(agingData.totals.total61to90)}</td>
-                <td className="p-4 text-right font-bold text-red-400">฿{formatBaht(agingData.totals.totalOver90)}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+            {agingData.rows.length === 0 && (
+              <TR>
+                <TD colSpan={6}>
+                  <EmptyState title="ไม่มียอดค้างชำระ ณ วันที่ระบุ" />
+                </TD>
+              </TR>
+            )}
+          </TBody>
+        </Table>
+        {agingData.rows.length > 0 && (
+          <div className="mt-2 rounded-md bg-slate-800 text-white px-3 py-2 flex items-center justify-end gap-6 text-sm flex-wrap">
+            <span className="font-bold">รวมทั้งสิ้น: ฿{formatBaht(agingData.totals.totalAll)}</span>
+            <span className="font-bold text-emerald-400">0-30 วัน: ฿{formatBaht(agingData.totals.total0to30)}</span>
+            <span className="font-bold text-amber-400">31-60 วัน: ฿{formatBaht(agingData.totals.total31to60)}</span>
+            <span className="font-bold text-orange-400">61-90 วัน: ฿{formatBaht(agingData.totals.total61to90)}</span>
+            <span className="font-bold text-red-400">เกิน 90 วัน: ฿{formatBaht(agingData.totals.totalOver90)}</span>
+          </div>
+        )}
       </div>
     </div>
   )

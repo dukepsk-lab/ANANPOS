@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma"
 import { ArClient } from "@/components/ar/ar-client"
 import { differenceInDays } from "date-fns"
+import { PageHeader } from "@/components/ui/page-header"
+import { StatCard } from "@/components/ui/stat-card"
+import { Wallet, AlertTriangle, AlertOctagon } from "lucide-react"
 
 export const dynamic = "force-dynamic"
 
@@ -80,32 +83,28 @@ export default async function ARPage() {
   })
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-800">ลูกหนี้ / เงินเชื่อ</h1>
-        <p className="text-slate-500 mt-1">จัดการหนี้สิน การวางบิล และรับชำระเงิน</p>
-      </div>
+    <div className="flex flex-col h-full gap-4">
+      <PageHeader title="ลูกหนี้ / เงินเชื่อ" description="จัดการหนี้สิน การวางบิล และรับชำระเงิน" />
 
-      {/* Header Stats */}
-      <div className="grid grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <p className="text-slate-500 font-medium">ยอดลูกหนี้รวม</p>
-          <p className="text-4xl font-black text-blue-600 mt-2">
-            ฿{totalAR.toLocaleString('th-TH', {minimumFractionDigits: 2})}
-          </p>
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <p className="text-slate-500 font-medium">ค้าง 31-60 วัน</p>
-          <p className="text-4xl font-black text-orange-500 mt-2">
-            ฿{overdue30.toLocaleString('th-TH', {minimumFractionDigits: 2})}
-          </p>
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <p className="text-slate-500 font-medium">ค้างเกิน 60 วัน</p>
-          <p className="text-4xl font-black text-red-600 mt-2">
-            ฿{overdue60.toLocaleString('th-TH', {minimumFractionDigits: 2})}
-          </p>
-        </div>
+      <div className="grid grid-cols-3 gap-3">
+        <StatCard
+          label="ยอดลูกหนี้รวม"
+          value={`฿${totalAR.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`}
+          icon={Wallet}
+          tone="default"
+        />
+        <StatCard
+          label="ค้าง 31-60 วัน"
+          value={`฿${overdue30.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`}
+          icon={AlertTriangle}
+          tone="warning"
+        />
+        <StatCard
+          label="ค้างเกิน 60 วัน"
+          value={`฿${overdue60.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`}
+          icon={AlertOctagon}
+          tone="danger"
+        />
       </div>
 
       <ArClient customers={processedCustomers} />

@@ -41,5 +41,9 @@ export default async function InvoiceDetailPage({
 
   if (!invoice) return notFound()
 
-  return <InvoiceDetailClient invoice={invoice} />
+  return (
+    <div className="flex flex-col h-full gap-4">
+      <InvoiceDetailClient invoice={invoice} />
+    </div>
+  )
 }

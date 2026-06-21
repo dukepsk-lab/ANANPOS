@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { DeliveryBoard } from "@/components/delivery/delivery-board"
+import { PageHeader } from "@/components/ui/page-header"
 
 
 // Disable caching to always show the latest delivery statuses
@@ -34,14 +35,9 @@ export default async function DeliveryPage() {
   })
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">คิวจัดส่ง (Delivery Board)</h1>
-          <p className="text-slate-500 mt-1">จัดการสถานะการจัดส่งสินค้า</p>
-        </div>
-      </div>
-      
+    <div className="flex flex-col h-full gap-4">
+      <PageHeader title="คิวจัดส่ง (Delivery Board)" description="จัดการสถานะการจัดส่งสินค้า" />
+
       <div className="flex-1 overflow-hidden">
         <DeliveryBoard initialDeliveries={deliveries} />
       </div>

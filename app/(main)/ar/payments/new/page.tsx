@@ -52,8 +52,8 @@ export default async function NewPaymentPage({
   }
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <PaymentClient 
+    <div className="flex flex-col h-full gap-4">
+      <PaymentClient
         customers={customers} 
         defaultCustomerId={defaultCustomerId} 
         defaultInvoiceId={defaultInvoiceId}

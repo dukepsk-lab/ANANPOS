@@ -32,8 +32,8 @@ export default async function NewInvoicePage({
   const eligibleCustomers = customers.filter(c => c.sales.length > 0 || c.id === defaultCustomerId)
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <CreateInvoiceClient 
+    <div className="flex flex-col h-full gap-4">
+      <CreateInvoiceClient
         customers={eligibleCustomers} 
         defaultCustomerId={defaultCustomerId} 
         currentUserId={parseInt(session.user.id)}

@@ -6,6 +6,9 @@ import Link from "next/link"
 import { ArrowLeft, Search, Save, PackageMinus } from "lucide-react"
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+import { Button } from "@/components/ui/button"
+import { Input, Select } from "@/components/ui/input"
+import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table"
 
 export function CreateReturnClient({ currentUserId }: { currentUserId: number }) {
   const router = useRouter()
@@ -124,119 +127,121 @@ export function CreateReturnClient({ currentUserId }: { currentUserId: number })
   }
 
   return (
-    <div className="flex flex-col h-full gap-6 max-w-5xl mx-auto w-full">
+    <div className="flex flex-col h-full gap-4 max-w-5xl mx-auto w-full">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <Link href="/returns" className="p-2 bg-white rounded-full hover:bg-slate-100 transition-colors shadow-sm">
-            <ArrowLeft className="w-5 h-5 text-slate-600" />
+      <div className="flex justify-between items-center gap-4">
+        <div className="flex items-center gap-3">
+          <Link href="/returns" className="p-2 bg-white rounded-md hover:bg-slate-100 transition-colors border border-border">
+            <ArrowLeft className="w-4 h-4 text-slate-600" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-slate-800">สร้างรายการรับคืน</h1>
-            <p className="text-slate-500 mt-1">ค้นหาบิลและระบุรายการสินค้าที่ลูกค้านำมาคืน</p>
+            <h1 className="text-lg font-heading font-bold text-slate-800 tracking-tight">สร้างรายการรับคืน</h1>
+            <p className="text-sm text-slate-500 mt-0.5">ค้นหาบิลและระบุรายการสินค้าที่ลูกค้านำมาคืน</p>
           </div>
         </div>
-        
-        <button 
+
+        <Button
+          variant="primary"
+          size="md"
           onClick={handlePreSubmit}
           disabled={isSubmitting || totalRefund === 0}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed rounded-xl text-white font-bold shadow-md transition-all active:scale-95"
         >
-          {isSubmitting ? "กำลังบันทึก..." : <><Save className="w-5 h-5" /> ยืนยันการรับคืน</>}
-        </button>
+          {isSubmitting ? "กำลังบันทึก..." : <><Save className="w-4 h-4" /> ยืนยันการรับคืน</>}
+        </Button>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex items-end gap-4">
+      <div className="card p-4 flex items-end gap-3">
         <div className="flex-1">
           <label className="block text-sm font-medium text-slate-700 mb-1">ค้นหาจากเลขที่บิลขาย (Bill No)</label>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input 
-              type="text" 
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              type="text"
               value={billNo}
               onChange={e => setBillNo(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && searchSale()}
               placeholder="เช่น INV-260618-0001"
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-9"
             />
           </div>
         </div>
-        <button 
+        <Button
+          variant="secondary"
+          size="md"
           onClick={searchSale}
           disabled={isSearching || !billNo}
-          className="px-6 py-3 bg-slate-800 hover:bg-slate-900 disabled:bg-slate-300 text-white font-bold rounded-xl h-[52px]"
         >
           {isSearching ? "กำลังค้นหา..." : "ค้นหาบิล"}
-        </button>
+        </Button>
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 font-medium">
+        <div className="bg-red-50 text-red-600 p-3 rounded-md border border-red-100 font-medium text-sm">
           {error}
         </div>
       )}
 
       {sale && (
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-4">
           {/* Items */}
-          <div className="col-span-2 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col h-[calc(100vh-320px)] overflow-hidden">
-            <div className="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-              <h2 className="font-bold text-slate-800 flex items-center gap-2">
-                <PackageMinus className="w-5 h-5" /> สินค้าในบิล {sale.billNo}
+          <div className="col-span-2 card p-0 flex flex-col h-[calc(100vh-280px)] overflow-hidden">
+            <div className="px-4 py-3 border-b border-border bg-slate-50 flex justify-between items-center">
+              <h2 className="font-semibold text-sm text-slate-800 flex items-center gap-2">
+                <PackageMinus className="w-4 h-4" /> สินค้าในบิล {sale.billNo}
               </h2>
-              <span className="text-sm font-medium text-slate-500">
+              <span className="text-xs font-medium text-slate-500">
                 ลูกค้า: {sale.customer?.name || "ขาจรทั่วไป"}
               </span>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-medium text-sm">
+              <table className="table-dense">
+                <thead>
                   <tr>
-                    <th className="p-4">รายการสินค้า</th>
-                    <th className="p-4 text-center">ซื้อไป</th>
-                    <th className="p-4 text-center w-32">จำนวนที่คืน</th>
-                    <th className="p-4 text-center">คืนเข้าสต็อก?</th>
-                    <th className="p-4 text-right">ยอดคืน (บาท)</th>
+                    <th>รายการสินค้า</th>
+                    <th className="text-center">ซื้อไป</th>
+                    <th className="text-center w-32">จำนวนที่คืน</th>
+                    <th className="text-center">คืนเข้าสต็อก?</th>
+                    <th className="text-right">ยอดคืน (บาท)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody>
                   {returnItems.map(item => (
                     <tr key={item.id} className={item.returnQty > 0 ? "bg-blue-50/50" : ""}>
-                      <td className="p-4">
-                        <p className="font-bold text-slate-800">{item.product.name}</p>
+                      <td className="px-3 py-2">
+                        <p className="font-semibold text-slate-800">{item.product.name}</p>
                         <p className="text-xs text-slate-500">
                           ราคา: {formatBaht(item.unitPrice)} / {item.productUnit.unit.name}
                         </p>
                       </td>
-                      <td className="p-4 text-center text-slate-600 font-medium">
+                      <td className="px-3 py-2 text-center text-slate-600 font-medium">
                         {item.quantity}
                       </td>
-                      <td className="p-4">
-                        <input 
-                          type="number" 
+                      <td className="px-3 py-2">
+                        <input
+                          type="number"
                           value={item.returnQty || ""}
                           onChange={(e) => updateReturnQty(item.id, e.target.value)}
-                          className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-center font-bold"
+                          className="input text-center font-semibold"
                           min="0"
                           max={item.quantity}
                         />
                       </td>
-                      <td className="p-4 text-center">
+                      <td className="px-3 py-2 text-center">
                         <label className="flex items-center justify-center gap-2 cursor-pointer">
-                          <input 
-                            type="checkbox" 
+                          <input
+                            type="checkbox"
                             checked={item.restock}
                             onChange={() => toggleRestock(item.id)}
                             disabled={item.returnQty === 0}
-                            className="w-5 h-5 rounded text-blue-600"
+                            className="w-4 h-4 rounded text-primary"
                           />
-                          <span className={`text-sm ${item.restock ? "text-slate-700" : "text-red-500"}`}>
+                          <span className={`text-xs ${item.restock ? "text-slate-700" : "text-red-500"}`}>
                             {item.restock ? "รับเข้าสต็อก" : "ของเสีย/ทิ้ง"}
                           </span>
                         </label>
                       </td>
-                      <td className="p-4 text-right font-bold text-blue-600">
+                      <td className="px-3 py-2 text-right font-semibold text-primary">
                         {formatBaht(item.returnQty * item.unitPrice)}
                       </td>
                     </tr>
@@ -247,44 +252,42 @@ export function CreateReturnClient({ currentUserId }: { currentUserId: number })
           </div>
 
           {/* Return Info */}
-          <div className="col-span-1 space-y-6">
-            <div className="bg-slate-800 rounded-2xl shadow-sm border border-slate-700 p-6 text-white">
-              <h3 className="text-slate-400 mb-2 font-medium">ยอดรวมที่ต้องคืนเงิน (บาท)</h3>
-              <div className="text-4xl font-black text-blue-400">{formatBaht(totalRefund)}</div>
+          <div className="col-span-1 space-y-4">
+            <div className="bg-slate-800 rounded-lg shadow-sm border border-slate-700 p-4 text-white">
+              <h3 className="text-slate-400 mb-1 text-sm font-medium">ยอดรวมที่ต้องคืนเงิน (บาท)</h3>
+              <div className="text-2xl font-bold text-blue-400">{formatBaht(totalRefund)}</div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4">
+            <div className="card space-y-3">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">เหตุผลการคืน</label>
-                <select 
+                <Select
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="CUSTOMER_RETURN">ลูกค้าขอเปลี่ยน/คืน</option>
                   <option value="DAMAGED">สินค้าชำรุดเสียหาย</option>
                   <option value="WRONG_ITEM">ร้านจ่ายสินค้าผิด</option>
-                </select>
+                </Select>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">วิธีคืนเงิน</label>
-                <select 
+                <Select
                   value={refundMethod}
                   onChange={(e) => setRefundMethod(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="CASH">คืนเป็นเงินสด</option>
                   {sale.customer && <option value="CREDIT_NOTE">ลดยอดค้างชำระ (Credit Note)</option>}
-                </select>
+                </Select>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">หมายเหตุ</label>
-                <textarea 
+                <textarea
                   value={note}
                   onChange={e => setNote(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 resize-none"
+                  className="input h-20 resize-none"
                   placeholder="รายละเอียดเพิ่มเติม..."
                 />
               </div>
