@@ -192,7 +192,7 @@ export function AgingReportClient({ customers }: any) {
           </TBody>
         </Table>
         {agingData.rows.length > 0 && (
-          <div className="mt-2 rounded-md bg-slate-800 text-white px-3 py-2 flex items-center justify-end gap-6 text-sm flex-wrap">
+          <div className="mt-2 rounded-md bg-slate-800 text-white px-3 py-2 flex items-center justify-end gap-4 text-sm flex-wrap">
             <span className="font-bold">รวมทั้งสิ้น: ฿{formatBaht(agingData.totals.totalAll)}</span>
             <span className="font-bold text-emerald-400">0-30 วัน: ฿{formatBaht(agingData.totals.total0to30)}</span>
             <span className="font-bold text-amber-400">31-60 วัน: ฿{formatBaht(agingData.totals.total31to60)}</span>

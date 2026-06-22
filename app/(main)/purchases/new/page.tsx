@@ -25,8 +25,8 @@ export default async function NewPurchasePage() {
   })
 
   return (
-    <div className="flex flex-col h-full gap-6">
-      <CreatePurchaseClient 
+    <div className="flex flex-col h-full gap-4">
+      <CreatePurchaseClient
         suppliers={suppliers} 
         products={products}
         currentUserId={parseInt(session.user.id)}

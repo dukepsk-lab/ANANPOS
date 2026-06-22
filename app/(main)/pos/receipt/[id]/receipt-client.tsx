@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { Button } from "@/components/ui/button"
 
 export function ReceiptClient({ sale }: { sale: any }) {
   useEffect(() => {
@@ -76,12 +77,12 @@ export function ReceiptClient({ sale }: { sale: any }) {
 
       {/* Hide controls when printing */}
       <div className="mt-6 print:hidden flex flex-col gap-2">
-        <button onClick={() => window.print()} className="btn-secondary w-full h-11 text-base">
+        <Button variant="secondary" size="lg" className="w-full" onClick={() => window.print()}>
           พิมพ์บิลอีกครั้ง
-        </button>
-        <button onClick={() => window.history.back()} className="btn-ghost w-full h-11 text-base bg-slate-100">
+        </Button>
+        <Button variant="ghost" size="lg" className="w-full bg-slate-100" onClick={() => window.history.back()}>
           กลับไปหน้าขาย
-        </button>
+        </Button>
       </div>
 
       <style jsx global>{`

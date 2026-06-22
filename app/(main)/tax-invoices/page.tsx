@@ -4,6 +4,7 @@ import { FileText, Printer } from "lucide-react"
 import { PageHeader } from "@/components/ui/page-header"
 import { Table, THead, TBody, TR, TH, TD } from "@/components/ui/table"
 import { EmptyState } from "@/components/ui/empty-state"
+import { Button } from "@/components/ui/button"
 
 
 export const dynamic = "force-dynamic"
@@ -47,12 +48,13 @@ export default async function TaxInvoicesPage() {
                 <TD className="text-slate-600">{s.customer?.taxId || "-"}</TD>
                 <TD className="text-right font-bold text-slate-800">{formatBaht(s.grandTotal)}</TD>
                 <TD className="text-center">
-                  <button
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => alert("ระบบพิมพ์ใบกำกับภาษี A4 กำลังอยู่ระหว่างพัฒนา")}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-primary hover:bg-blue-100 rounded-md text-sm font-medium transition-colors"
                   >
                     <Printer className="w-4 h-4" /> พิมพ์ (PDF)
-                  </button>
+                  </Button>
                 </TD>
               </TR>
             ))}

@@ -150,33 +150,33 @@ export function InventoryClient({ initialData }: { initialData: any[] }) {
           </Button>
         </div>
 
-        <div className="flex-1 overflow-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 sticky top-0 z-10">
-              <tr className="text-slate-500 font-semibold text-xs uppercase tracking-wide">
-                <th className="px-3 py-2 border-b border-border">รหัส</th>
-                <th className="px-3 py-2 border-b border-border">สินค้า</th>
-                <th className="px-3 py-2 border-b border-border text-right">คงเหลือ</th>
-                <th className="px-3 py-2 border-b border-border">หน่วยฐาน</th>
-                <th className="px-3 py-2 border-b border-border text-right">จุดสั่งซื้อ</th>
-                <th className="px-3 py-2 border-b border-border text-right">ทุนเฉลี่ย</th>
-                <th className="px-3 py-2 border-b border-border text-right">มูลค่ารวม</th>
-                <th className="px-3 py-2 border-b border-border text-center">สถานะ</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
+        <div className="flex-1 overflow-hidden">
+          <Table>
+            <THead>
+              <TR>
+                <TH>รหัส</TH>
+                <TH>สินค้า</TH>
+                <TH className="text-right">คงเหลือ</TH>
+                <TH>หน่วยฐาน</TH>
+                <TH className="text-right">จุดสั่งซื้อ</TH>
+                <TH className="text-right">ทุนเฉลี่ย</TH>
+                <TH className="text-right">มูลค่ารวม</TH>
+                <TH className="text-center">สถานะ</TH>
+              </TR>
+            </THead>
+            <TBody>
               {filteredData.map(item => (
-                <tr key={item.id} className={`hover:bg-slate-50 ${item.status === 'URGENT' ? 'bg-red-50/30' : ''}`}>
-                  <td className="px-3 py-2 text-slate-500 font-mono text-xs">{item.code}</td>
-                  <td className="px-3 py-2 font-medium text-slate-800">{item.name}</td>
-                  <td className={`px-3 py-2 text-right font-semibold ${item.status === 'URGENT' ? 'text-red-600' : 'text-slate-700'}`}>
+                <TR key={item.id} className={item.status === 'URGENT' ? 'bg-red-50/30' : ''}>
+                  <TD className="text-slate-500 font-mono text-xs">{item.code}</TD>
+                  <TD className="font-medium text-slate-800">{item.name}</TD>
+                  <TD className={`text-right font-semibold ${item.status === 'URGENT' ? 'text-red-600' : 'text-slate-700'}`}>
                     {formatQty(item.quantityOnHand)}
-                  </td>
-                  <td className="px-3 py-2 text-slate-600">{item.baseUnit}</td>
-                  <td className="px-3 py-2 text-right text-slate-500">{formatQty(item.reorderPoint)}</td>
-                  <td className="px-3 py-2 text-right text-slate-600">฿{formatBaht(item.avgCost)}</td>
-                  <td className="px-3 py-2 text-right font-medium text-primary">฿{formatBaht(item.totalValue)}</td>
-                  <td className="px-3 py-2 text-center">
+                  </TD>
+                  <TD className="text-slate-600">{item.baseUnit}</TD>
+                  <TD className="text-right text-slate-500">{formatQty(item.reorderPoint)}</TD>
+                  <TD className="text-right text-slate-600">฿{formatBaht(item.avgCost)}</TD>
+                  <TD className="text-right font-medium text-primary">฿{formatBaht(item.totalValue)}</TD>
+                  <TD className="text-center">
                     {item.status === "URGENT" ? (
                       <Badge variant="danger">
                         <AlertTriangle className="w-3 h-3" /> ต้องสั่งซื้อ
@@ -184,18 +184,18 @@ export function InventoryClient({ initialData }: { initialData: any[] }) {
                     ) : (
                       <Badge variant="success">ปกติ</Badge>
                     )}
-                  </td>
-                </tr>
+                  </TD>
+                </TR>
               ))}
               {filteredData.length === 0 && (
-                <tr>
-                  <td colSpan={8}>
+                <TR>
+                  <TD colSpan={8}>
                     <EmptyState title="ไม่พบข้อมูลสินค้า" />
-                  </td>
-                </tr>
+                  </TD>
+                </TR>
               )}
-            </tbody>
-          </table>
+            </TBody>
+          </Table>
         </div>
       </div>
     </div>
